@@ -20,34 +20,23 @@ class _CustomGoogleMapState extends State<CustomGoogleMap> {
   @override
   void dispose() {
     googleMapController.dispose();
+
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        GoogleMap(
-          initialCameraPosition: initialCameraPosition,
-          onMapCreated: (controller) {
-            googleMapController = controller;
-          },
-        ),
-        Positioned(
-          top: 500,
-          left: 200,
-          child: ElevatedButton(
-              onPressed: () {
-                CameraPosition newCameraPosition = const CameraPosition(
-                  zoom: 10,
-                  target: LatLng(30.058698566337153, 31.227461368544287),
-                );
-                googleMapController.animateCamera(
-                    CameraUpdate.newCameraPosition(newCameraPosition));
-              },
-              child: const Text("go")),
-        ),
-      ],
-    );
+    return GoogleMap(
+        initialCameraPosition: initialCameraPosition,
+        onMapCreated: (controller) {
+          googleMapController = controller;
+          initMapStyle();
+        });
+  }
+
+  void initMapStyle() async {
+    var nightmapstyle = await DefaultAssetBundle.of(context)
+        .loadString('assets/map_styles/night_map_style.json');
+    googleMapController.setMapStyle(nightmapstyle);
   }
 }
