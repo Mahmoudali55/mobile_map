@@ -23,7 +23,8 @@ class _CustomGoogleMapState extends State<CustomGoogleMap> {
         zoom: 10, target: LatLng(31.03686361532399, 31.393837474529327));
     // initMarkers();
     //initPlylines();
-    initPloygons();
+    // initPloygons();
+    initCircles();
     super.initState();
   }
 
@@ -37,11 +38,13 @@ class _CustomGoogleMapState extends State<CustomGoogleMap> {
   Set<Marker> markers = {};
   Set<Polyline> polylines = {};
   Set<Polygon> polygons = {};
+  Set<Circle> circles = {};
 
   @override
   Widget build(BuildContext context) {
     return GoogleMap(
         zoomControlsEnabled: false,
+        circles: circles,
         polygons: polygons,
         polylines: polylines,
         markers: markers,
@@ -75,7 +78,7 @@ class _CustomGoogleMapState extends State<CustomGoogleMap> {
     //     await getBytesFromRowData('assets/images/location.png', 50));
     var customMarkerIcon = await BitmapDescriptor.fromAssetImage(
         const ImageConfiguration(), 'assets/images/location.png');
-
+// رسم نقطه معينه علي الخريطه
     var myMarkers = places
         .map((PlaceModel) => Marker(
             markerId: MarkerId(PlaceModel.id.toString()),
@@ -87,6 +90,7 @@ class _CustomGoogleMapState extends State<CustomGoogleMap> {
     });
   }
 
+// بتححد بعض الخطوط بين الاماكن
   void initPlylines() {
     Polyline polyline =
         const Polyline(polylineId: PolylineId('1'), color: Colors.red, points: [
@@ -98,6 +102,7 @@ class _CustomGoogleMapState extends State<CustomGoogleMap> {
     polylines.add(polyline);
   }
 
+// بتححدد بعض الاماكن
   void initPloygons() {
     Polygon polygon = Polygon(
         polygonId: const PolygonId('1'),
@@ -118,5 +123,15 @@ class _CustomGoogleMapState extends State<CustomGoogleMap> {
           LatLng(31.11834713379703, 31.450770721973228),
         ]);
     polygons.add(polygon);
+  }
+
+// بتححدد بعض الاماكن علي شكل دائره المهمه
+  void initCircles() {
+    Circle circle = Circle(
+        fillColor: Colors.black.withOpacity(.5),
+        circleId: const CircleId('1'),
+        radius: 10000,
+        center: const LatLng(31.03703215287056, 31.393389775606604));
+    circles.add(circle);
   }
 }
