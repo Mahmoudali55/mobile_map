@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+
 import 'package:mobile_map/models/place_model.dart';
 import 'dart:ui' as ui;
 
@@ -21,7 +22,8 @@ class _CustomGoogleMapState extends State<CustomGoogleMap> {
     initialCameraPosition = const CameraPosition(
         zoom: 10, target: LatLng(31.03686361532399, 31.393837474529327));
     // initMarkers();
-    initPlylines();
+    //initPlylines();
+    initPloygons();
     super.initState();
   }
 
@@ -34,11 +36,13 @@ class _CustomGoogleMapState extends State<CustomGoogleMap> {
 
   Set<Marker> markers = {};
   Set<Polyline> polylines = {};
+  Set<Polygon> polygons = {};
 
   @override
   Widget build(BuildContext context) {
     return GoogleMap(
         zoomControlsEnabled: false,
+        polygons: polygons,
         polylines: polylines,
         markers: markers,
         initialCameraPosition: initialCameraPosition,
@@ -92,5 +96,27 @@ class _CustomGoogleMapState extends State<CustomGoogleMap> {
       LatLng(31.11834713379703, 31.450770721973228),
     ]);
     polylines.add(polyline);
+  }
+
+  void initPloygons() {
+    Polygon polygon = Polygon(
+        polygonId: const PolygonId('1'),
+        fillColor: Colors.black.withOpacity(.5),
+        strokeWidth: 2,
+        //بتشيل بعض الاماكن
+        holes: const [
+          [
+            LatLng(31.082031894074294, 31.418896639342616),
+            LatLng(31.085398370341775, 31.409619717862228),
+            LatLng(31.095128276334805, 31.409230232973673),
+          ]
+        ],
+        points: const [
+          LatLng(31.01568770514533, 31.38832825260846),
+          LatLng(31.037901296576674, 31.35467695670655),
+          LatLng(31.038598678394862, 31.34497258810785),
+          LatLng(31.11834713379703, 31.450770721973228),
+        ]);
+    polygons.add(polygon);
   }
 }
