@@ -20,7 +20,9 @@ class _CustomGoogleMapState extends State<CustomGoogleMap> {
   void initState() {
     initialCameraPosition = const CameraPosition(
         zoom: 10, target: LatLng(31.03686361532399, 31.393837474529327));
-    initMarkers();
+    // initMarkers();
+    initPlylines();
+    super.initState();
   }
 
   @override
@@ -31,10 +33,13 @@ class _CustomGoogleMapState extends State<CustomGoogleMap> {
   }
 
   Set<Marker> markers = {};
+  Set<Polyline> polylines = {};
 
   @override
   Widget build(BuildContext context) {
     return GoogleMap(
+        zoomControlsEnabled: false,
+        polylines: polylines,
         markers: markers,
         initialCameraPosition: initialCameraPosition,
         onMapCreated: (controller) {
@@ -49,21 +54,23 @@ class _CustomGoogleMapState extends State<CustomGoogleMap> {
     googleMapController.setMapStyle(nightmapstyle);
   }
 
-  Future<Uint8List> getBytesFromRowData(String image, int width) async {
-    var imageData = await rootBundle.load(image);
-    var imageCodec = await ui.instantiateImageCodec(
-        imageData.buffer.asUint8List(),
-        targetWidth: width.round());
+  // Future<Uint8List> getBytesFromRowData(String image, int width) async {
+  //   var imageData = await rootBundle.load(image);
+  //   var imageCodec = await ui.instantiateImageCodec(
+  //       imageData.buffer.asUint8List(),
+  //       targetWidth: width.round());
 
-    var imageFrameinfo = await imageCodec.getNextFrame();
-    var imageBytDate =
-        await imageFrameinfo.image.toByteData(format: ui.ImageByteFormat.png);
-    return imageBytDate!.buffer.asUint8List();
-  }
+  //   var imageFrameinfo = await imageCodec.getNextFrame();
+  //   var imageBytDate =
+  //       await imageFrameinfo.image.toByteData(format: ui.ImageByteFormat.png);
+  //   return imageBytDate!.buffer.asUint8List();
+  // }
 
   void initMarkers() async {
-    var customMarkerIcon = BitmapDescriptor.fromBytes(
-        await getBytesFromRowData('assets/images/location.png', 50));
+    // var customMarkerIcon = BitmapDescriptor.fromBytes(
+    //     await getBytesFromRowData('assets/images/location.png', 50));
+    var customMarkerIcon = await BitmapDescriptor.fromAssetImage(
+        const ImageConfiguration(), 'assets/images/location.png');
 
     var myMarkers = places
         .map((PlaceModel) => Marker(
@@ -74,5 +81,16 @@ class _CustomGoogleMapState extends State<CustomGoogleMap> {
       markers.add(element);
       setState(() {});
     });
+  }
+
+  void initPlylines() {
+    Polyline polyline =
+        const Polyline(polylineId: PolylineId('1'), color: Colors.red, points: [
+      LatLng(31.01568770514533, 31.38832825260846),
+      LatLng(31.037901296576674, 31.35467695670655),
+      LatLng(31.038598678394862, 31.34497258810785),
+      LatLng(31.11834713379703, 31.450770721973228),
+    ]);
+    polylines.add(polyline);
   }
 }
